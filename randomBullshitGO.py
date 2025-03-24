@@ -18,6 +18,7 @@ from datetime import datetime
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'Using device: {device}')
 
+# TODO : check to see if there is a better way to do it
 class SystemMonitor:
     def measure_resources(self, duration):
         process = psutil.Process()
@@ -102,6 +103,7 @@ class ModelTester:
             start_time = time.time()
             avg_mem, total_mem, avg_cpu = self.monitor.measure_resources(5)
 
+            # TODO : adjust the ann so the architecture match the scenario with KAN
             if model_name == "ANN":
                 model = ANN(X_train.shape[1], params['architecture'], params['activation']).to(device)
                 criterion = nn.MSELoss()
@@ -134,10 +136,12 @@ class ModelTester:
                 train_preds = model(dataset['train_input'])[:, 0].cpu().detach().numpy()
                 test_preds = model(dataset['test_input'])[:, 0].cpu().detach().numpy()
 
+                # Manual Debug
                 if np.isnan(train_preds).any() or np.isnan(test_preds).any():
                     print("Warning: KAN is outputting NaN predictions!")
 
                 if run == 0:
+                    # TODO : Check for autosymbolic accuracy and validity
                     lib = ['x', 'x^2', 'x^3', 'x^4', 'exp', 'log', 'sqrt', 'tanh', 'sin', 'tan', 'abs']
                     model.auto_symbolic(lib=lib)
                     formula = model.symbolic_formula()[0][0]
@@ -194,7 +198,7 @@ class ModelTester:
             avg_overall.to_excel(writer, sheet_name='Overall Averages', index=False)
         print(f"Final results saved to {filename}")
 
-
+# TODO : seperate the file as a master and dataset based file
 if __name__ == "__main__":
     datasets = [
         {"name": "Forest Fires", "path": "data/Forest Fire/forestfires.csv", "target_column": "area",
@@ -213,6 +217,8 @@ if __name__ == "__main__":
         X, _ = tester.load_data(dataset['path'], dataset['target_column'], dataset.get('categorical_columns', []))
         feature_counts[dataset['name']] = X.shape[1]
 
+
+# TODO : Change this part so the num_features is according to the dataset
     # Generate scenarios dynamically based on extracted feature counts
     scenarios = {}
     for dataset in datasets:
@@ -226,6 +232,9 @@ if __name__ == "__main__":
                 {"architecture": [num_features, 10, 5, 1], "grid": 10, "spline_order": 4, "optimizer": "LBFGS"},
                 {"architecture": [num_features, 5, 1], "grid": 5, "spline_order": 4, "optimizer": "LBFGS"},
             ],
+            # TODO : check if this makes sense, ANN is called with input size and architecture refers to the num_features
+            # Option A : make is so it's input shape' -> initial architecture
+            # Option B : make it so it's input shape, then bypass the first layer of architecture to match KAN
             "ANN": [
                 {"architecture": (num_features, 5, 1), "epochs": 100, "activation": "relu", "optimizer": "adam",
                  "learning_rate": 0.01},
@@ -247,6 +256,7 @@ if __name__ == "__main__":
             ]
         }
 
+    # TODO : Fix this shit
     # Run experiments with correct scenarios
     for dataset in datasets:
         tester.run_all_experiments(scenarios[dataset['name']])
