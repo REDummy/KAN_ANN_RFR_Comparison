@@ -140,7 +140,7 @@ class ModelTester:
                 if np.isnan(train_preds).any() or np.isnan(test_preds).any():
                     print("Warning: KAN is outputting NaN predictions!")
 
-                if run == 0:
+                if run == 4:
                     # TODO : Check for autosymbolic accuracy and validity
                     lib = ['x', 'x^2', 'x^3', 'x^4', 'exp', 'log', 'sqrt', 'tanh', 'sin', 'tan', 'abs']
                     model.auto_symbolic(lib=lib)
@@ -201,11 +201,11 @@ class ModelTester:
 # TODO : seperate the file as a master and dataset based file
 if __name__ == "__main__":
     datasets = [
-        {"name": "Forest Fires", "path": "data/Forest Fire/forestfires.csv", "target_column": "area",
-         "categorical_columns": ["month", "day"]},
-        {"name": "Student Performance", "path": "data/Student/student-mat.csv", "target_column": "G3",
-         "categorical_columns": ["school","sex","address","famsize","Pstatus","Mjob","Fjob","reason","guardian",
-                                            "schoolsup","famsup","paid","activities","nursery","higher","internet","romantic"]},
+        # {"name": "Forest Fires", "path": "data/Forest Fire/forestfires.csv", "target_column": "area",
+         # "categorical_columns": ["month", "day"]},
+        # {"name": "Student Performance", "path": "data/Student/student-mat.csv", "target_column": "G3",
+        #  "categorical_columns": ["school","sex","address","famsize","Pstatus","Mjob","Fjob","reason","guardian",
+        #                                     "schoolsup","famsup","paid","activities","nursery","higher","internet","romantic"]},
         {"name": "Superconductor", "path": "data/Superconductor/train.csv", "target_column": "critical_temp"},
     ]
 
