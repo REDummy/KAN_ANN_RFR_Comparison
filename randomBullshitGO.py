@@ -232,9 +232,6 @@ if __name__ == "__main__":
                 {"architecture": [num_features, 10, 5, 1], "grid": 10, "spline_order": 4, "optimizer": "LBFGS"},
                 {"architecture": [num_features, 5, 1], "grid": 5, "spline_order": 4, "optimizer": "LBFGS"},
             ],
-            # TODO : check if this makes sense, ANN is called with input size and architecture refers to the num_features
-            # Option A : make is so it's input shape' -> initial architecture
-            # Option B : make it so it's input shape, then bypass the first layer of architecture to match KAN
             "ANN": [
                 {"architecture": (num_features, 5, 1), "epochs": 100, "activation": "relu", "optimizer": "adam",
                  "learning_rate": 0.01},
